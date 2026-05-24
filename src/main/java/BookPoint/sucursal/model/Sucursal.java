@@ -21,6 +21,13 @@ public class Sucursal {
     private Long idSucursal;
 
     @Column(nullable = false)
+    private Long idBodega;
+    // @Column(nullable = false)
+    // private Long idPedido;
+    // @Column(nullable = false)
+    // private Long idTraslado;
+
+    @Column(nullable = false)
     private String direccion;
 
     @Column(nullable = false)
