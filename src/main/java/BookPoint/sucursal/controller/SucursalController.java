@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import BookPoint.sucursal.service.SucursalService;
 
 @RestController
-@RequestMapping("api/sucursales")
+@RequestMapping("api/v1/sucursales")
 public class SucursalController {
     @Autowired
     private SucursalService sucursalService;

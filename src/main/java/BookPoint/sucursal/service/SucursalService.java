@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import BookPoint.sucursal.model.BodegaDTO;
-import BookPoint.sucursal.model.PedidoDTO;
 import BookPoint.sucursal.model.Sucursal;
 import BookPoint.sucursal.model.TrasladoDTO;
 import BookPoint.sucursal.repository.SucursalRepository;
@@ -21,7 +20,7 @@ public class SucursalService {
     private RestTemplate restTemplate;
 
     public BodegaDTO obtenerBodega(Long idBodega) {
-        String url = "http://localhost:8082/api/bodegas/" + idBodega;
+        String url = "http://localhost:8082/api/v1/bodega/" + idBodega;
         return restTemplate.getForObject(url, BodegaDTO.class);
     }
 
