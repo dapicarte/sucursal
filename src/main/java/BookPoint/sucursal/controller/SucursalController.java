@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -50,6 +51,15 @@ public class SucursalController {
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
+    @GetMapping("/{id}/stock")
+    public ResponseEntity<?> consultarStock(@PathVariable Long id) {
+        String stock = sucursalService.consultarStock(id);
+        if (stock == null) {
+            return new ResponseEntity<>("Sucursal con id " + id + " no existe", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(stock, HttpStatus.OK);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> obtenerSucursal(@PathVariable Long id) {
         Sucursal buscado = sucursalService.findById(id).orElse(null);
@@ -65,5 +75,14 @@ public class SucursalController {
             return new ResponseEntity<>("Sucursal con id " + id + " eliminada correctamente", HttpStatus.OK);
         }
         return new ResponseEntity<>("Sucursal con id " + id + " no existe", HttpStatus.NOT_FOUND);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> actualizarSucursal(@PathVariable Long id, @RequestBody Sucursal sucursal) {
+        Sucursal actualizado = sucursalService.actualizarSucursal(id, sucursal);
+        if (actualizado == null) {
+            return new ResponseEntity<>("Sucursal con id " + id + " no existe", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(actualizado, HttpStatus.OK);
     }
 }

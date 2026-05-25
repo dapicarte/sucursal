@@ -66,4 +66,31 @@ public class SucursalService {
         }
         return dto;
     }
+
+    public String consultarStock(Long idSucursal) {
+        Sucursal sucursal = sucursalRepository.findById(idSucursal).orElse(null);
+        if (sucursal == null) return null;
+
+        try {
+            String urlInventario = "http://localhost:8091/api/v1/inventario/stockPorBodega/" + sucursal.getIdBodega();
+            String stock = restTemplate.getForObject(urlInventario, String.class);
+            return stock;
+        } catch (Exception e) {
+            System.out.println("*************************");
+            System.out.println("Inventario no disponible: " + e.getMessage());
+            System.out.println("*************************");
+            return "Stock no disponible en este momento";
+        }
+    }
+
+    public Sucursal actualizarSucursal(Long id, Sucursal sucursal) {
+        Sucursal buscado = sucursalRepository.findById(id).orElse(null);
+        if (buscado == null) return null;
+
+        buscado.setDireccionSucursal(sucursal.getDireccionSucursal());
+        buscado.setHorario(sucursal.getHorario());
+        buscado.setIdBodega(sucursal.getIdBodega());
+
+        return sucursalRepository.save(buscado);
+    }
 }
