@@ -19,17 +19,13 @@ public class Sucursal {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idSucursal;
-
+    
     @Column(nullable = false)
-    private Long idBodega;
-    // @Column(nullable = false)
-    // private Long idPedido;
-    // @Column(nullable = false)
-    // private Long idTraslado;
-
-    @Column(nullable = false)
-    private String direccion;
+    private String direccionSucursal;
 
     @Column(nullable = false)
     private String horario;
+    
+    @Column(nullable = true)
+    private Long idBodega;
 }

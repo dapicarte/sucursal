@@ -1,12 +1,15 @@
 package BookPoint.sucursal.service;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import BookPoint.sucursal.model.BodegaDTO;
 import BookPoint.sucursal.model.Sucursal;
-import BookPoint.sucursal.model.TrasladoDTO;
+import BookPoint.sucursal.model.SucursalDTO;
 import BookPoint.sucursal.repository.SucursalRepository;
 import jakarta.transaction.Transactional;
 
@@ -19,22 +22,48 @@ public class SucursalService {
     @Autowired
     private RestTemplate restTemplate;
 
-    public BodegaDTO obtenerBodega(Long idBodega) {
-        String url = "http://localhost:8082/api/v1/bodega/" + idBodega;
-        return restTemplate.getForObject(url, BodegaDTO.class);
-    }
-
-    // public TrasladoDTO obtenerTraslado(Long idTraslado) {
-    //     String url = "http://localhost:8084/api/traslados/" + idTraslado;
-    //     return restTemplate.getForObject(url, TrasladoDTO.class);
-    // }
-
     public Sucursal crearSucursal(Sucursal sucursal) {
-        BodegaDTO bodega = obtenerBodega(sucursal.getIdBodega());
-        if (bodega != null) {
-        }
-
-    return sucursalRepository.save(sucursal);
+        System.out.println("*************************");
+        System.out.println(sucursal);
+        System.out.println("*************************");
+        return sucursalRepository.save(sucursal);
     }
 
+    public List<Sucursal> listarSucursales() {
+        return sucursalRepository.findAll();
+    }
+
+    public Optional<Sucursal> findById(Long id) {
+        return sucursalRepository.findById(id);
+    }
+
+    public boolean eliminarSucursal(Long id) {
+        if (sucursalRepository.existsById(id)) {
+            sucursalRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+
+    public SucursalDTO obtenerSucursalDTO(Long idSucursal) {
+        Sucursal sucursal = sucursalRepository.findById(idSucursal).orElse(null);
+        if (sucursal == null) return null;
+
+        SucursalDTO dto = new SucursalDTO();
+        dto.setIdSucursal(sucursal.getIdSucursal());
+        dto.setDireccionSucursal(sucursal.getDireccionSucursal());
+        dto.setHorario(sucursal.getHorario());
+
+        try {
+            String urlBodega = "http://localhost:8093/api/v1/bodega/" + sucursal.getIdBodega();
+            BodegaDTO bodega = restTemplate.getForObject(urlBodega, BodegaDTO.class);
+            if (bodega != null) {
+                dto.setNombreBodega(bodega.getNombreBodega());
+                dto.setCapacidadMax(bodega.getCapacidadMax());
+            }
+        } catch (Exception e) {
+            System.out.println("Bodega no disponible: " + e.getMessage());
+        }
+        return dto;
+    }
 }
